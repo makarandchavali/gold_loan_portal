@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X, LogOut } from 'lucide-react';
+import Dashboard from './Dashboard'; // ADD THIS
 import DailyBusinessForm from './DailyBusinessForm';
 import GoldStockForm from './GoldStockForm';
 import KYCComplianceForm from './KYCComplianceForm';
@@ -8,9 +9,10 @@ import CustomerFeedbackForm from './CustomerFeedbackForm';
 
 const MainLayout = ({ managerData, onLogout }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeForm, setActiveForm] = useState('daily-business');
+  const [activeForm, setActiveForm] = useState('dashboard'); // CHANGED from 'daily-business' to 'dashboard'
 
   const forms = [
+    { id: 'dashboard', name: 'Dashboard', icon: '🏠' }, // ADD THIS
     { id: 'daily-business', name: 'Daily Business Update', icon: '📊' },
     { id: 'gold-stock', name: 'Gold Stock Verification', icon: '🔒' },
     { id: 'kyc-compliance', name: 'KYC & Compliance', icon: '📋' },
@@ -20,6 +22,8 @@ const MainLayout = ({ managerData, onLogout }) => {
 
   const renderForm = () => {
     switch(activeForm) {
+      case 'dashboard':
+        return <Dashboard managerData={managerData} />; // ADD THIS
       case 'daily-business':
         return <DailyBusinessForm managerData={managerData} />;
       case 'gold-stock':
@@ -31,7 +35,7 @@ const MainLayout = ({ managerData, onLogout }) => {
       case 'customer-feedback':
         return <CustomerFeedbackForm managerData={managerData} />;
       default:
-        return <DailyBusinessForm managerData={managerData} />;
+        return <Dashboard managerData={managerData} />; // CHANGED default
     }
   };
 
@@ -45,7 +49,7 @@ const MainLayout = ({ managerData, onLogout }) => {
             alt="Logo" 
             className="sidebar-logo"
           />
-          <h2>Forms</h2>
+          <h2>Portal</h2>
         </div>
         
         <nav className="sidebar-nav">
