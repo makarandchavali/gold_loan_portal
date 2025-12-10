@@ -24,15 +24,15 @@ body {
 
 /* Sidebar Logo */
 .sidebar-logo {
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
   margin-bottom: 8px;
 }
 
 /* Header Logo */
 .header-logo {
-  width: 50px;
+  width: 90px;
   height: 50px;
   object-fit: contain;
   margin-right: 16px;
@@ -1077,3 +1077,334 @@ body {
   }
 }
 
+.team-header {
+    /* Ensures the label container is not taking up unnecessary space */
+    width: fit-content; 
+    margin-bottom: 5px; /* Add some spacing below the header */
+}
+
+.team-select-label {
+    /* Use Flexbox for guaranteed inline alignment and vertical centering */
+    display: flex;
+    align-items: center; /* Vertically align items */
+    cursor: pointer;
+    user-select: none; /* Prevent selection of the text */
+}
+
+.team-select-label input[type="checkbox"] {
+    /* Adds space between the checkbox and the text */
+    margin-right: 10px; 
+    /* Adjust size if necessary */
+    transform: scale(1.2); 
+}
+
+.team-select-label h3 {
+    /* Removes default margins from the heading element so it aligns perfectly with the checkbox */
+    margin: 0;
+    font-size: 1.1em; /* Adjust as needed */
+}
+
+
+/* General Setup */
+.dashboard-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
+.dashboard-header {
+    background-color: #4069b4; /* Primary Blue/Bank Color */
+    color: white;
+    padding: 25px 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 1.8em;
+}
+
+.dashboard-header p {
+    margin: 5px 0 0 0;
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+.header-date {
+    text-align: right;
+    font-size: 0.9em;
+}
+
+.date-value {
+    display: block;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+/* Status Messages */
+.loading-message, .error-message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.error-message {
+    background-color: #f8d7da; /* Light Red */
+    color: #721c24; /* Dark Red */
+    border: 1px solid #f5c6cb;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 5px solid transparent;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    font-size: 2.2em;
+    margin-right: 15px;
+    opacity: 0.8;
+}
+
+.stat-value {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+/* Card Color Coding */
+.stat-card.total-assignments { border-left-color: #4069b4; color: #4069b4; }
+.stat-card.completed-today { border-left-color: #28a745; color: #28a745; } /* Green */
+.stat-card.pending-forms { border-left-color: #de4444; color: #de4444; } /* Red */
+.stat-card.total-employees { border-left-color: #6f42c1; color: #6f42c1; } /* Purple */
+
+/* Divider */
+.divider {
+    border: 0;
+    height: 1px;
+    background-color: #e9ecef;
+    margin: 30px 0;
+}
+
+/* Submissions Section & Table */
+.recent-submissions-section {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-header-filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header-filter h2 {
+    margin: 0;
+    font-size: 1.4em;
+    color: #333;
+}
+
+.filter-group label {
+    font-weight: 600;
+    margin-right: 8px;
+    color: #495057;
+}
+
+.filter-group select {
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.submissions-table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table thead {
+    background-color: #e9ecef;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 0.95em;
+}
+
+table th {
+    font-weight: 700;
+    color: #495057;
+    text-transform: uppercase;
+}
+
+table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 6px 10px;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 0.8em;
+    display: inline-block;
+}
+
+.status-submitted {
+    background-color: #4069b4; /* Blue */
+    color: white;
+}
+
+.status-pending {
+    background-color: #de4444; /* Red */
+    color: white;
+}
+
+.no-data-message {
+    text-align: center;
+    padding: 30px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Action Buttons */
+.action-btn {
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.1s;
+    min-width: 90px;
+}
+
+.action-btn:active {
+    transform: translateY(1px);
+}
+
+.view-submission {
+    background-color: #4069b4;
+    color: white;
+}
+
+.view-submission:hover {
+    background-color: #345694;
+}
+
+.send-reminder {
+    background-color: #ffc107; /* Warning Yellow */
+    color: #333;
+}
+
+.send-reminder:hover {
+    background-color: #e0a800;
+}
+
+/* Branch Info Card */
+.branch-info-card {
+    background: #e9ecef;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+    border-left: 5px solid #6c757d;
+}
+
+.branch-info-card h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.branch-info-card p {
+    font-size: 0.95em;
+    color: #495057;
+}
+
+/* Base Button Style (Applies to both Remind and View) */
+.btn {
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.1s ease; /* Smooth hover transition */
+    white-space: nowrap;
+    font-size: 14px;
+    margin: 0 5px; /* Add slight separation from other elements */
+}
+
+/* Style for the 'View' Button (Submitted status) */
+.btn.view {
+    background-color: #2ecc71; /* Bright Green */
+    color: #ffffff; /* White text */
+    box-shadow: 0 4px 8px rgba(46, 204, 113, 0.4); /* Green shadow for highlight */
+}
+
+/* Highlight/Hover Effect for the 'View' Button */
+.btn.view:hover {
+    background-color: #27ae60; /* Slightly darker green on hover */
+    box-shadow: 0 6px 12px rgba(46, 204, 113, 0.5); /* Stronger shadow on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Optional: Style for the 'Remind' Button (Pending status) */
+.btn.remind {
+    background-color: #e67e22; /* Orange */
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(230, 126, 34, 0.4); /* Orange shadow */
+}
+
+.btn.remind:hover {
+    background-color: #d35400; /* Darker orange on hover */
+    box-shadow: 0 6px 12px rgba(230, 126, 34, 0.5); 
+    transform: translateY(-2px);
+}
+
+/* Ensure the table cell doesn't squash the button */
+.assignments-table td:last-child {
+    text-align: center;
+}

@@ -45,10 +45,11 @@ const MainLayout = ({ managerData, onLogout }) => {
       <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
           <img 
-            src="/img.png" 
-            alt="Logo" 
-            className="sidebar-logo"
-          />
+  src="/IIFL logo.png" 
+  alt="Logo" 
+  className="sidebar-logo"
+  style={{ width: "150px", height: "90px" }}
+/>
           <h2>Portal</h2>
         </div>
         

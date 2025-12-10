@@ -8,7 +8,7 @@ const EmployeeLayout = ({ employeeData, onLogout }) => {
       <header className="employee-header">
         <div className="employee-header-left">
             <img 
-            src="/img.png" 
+            src="/IIFL logo.png" 
             alt="Logo" 
             className="header-logo"
           />

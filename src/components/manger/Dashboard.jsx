@@ -1,183 +1,188 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 
-const Dashboard = ({ managerData }) => {
+const APPS_SCRIPT_WEB_APP_URL =
+  "https://script.google.com/macros/s/AKfycbwf8TUBiPA7r7f6eQFbeqA-AMc2KcnbuPDrCOAvfwWpM67Cn6ajREKQXIqBUT5HL4TS/exec";
+
+const Dashboard = ({
+  managerData = {
+    name: "Rajesh Kumar",
+    id: "MGR005",
+    branch: "Mumbai Central",
+    email: "rajesh.k@bank.com",
+  },
+}) => {
+  /* ---------------- STATE ---------------- */
   const [stats, setStats] = useState({
     totalAssignments: 0,
     pendingForms: 0,
     completedToday: 0,
-    totalEmployees: 16 // 4 teams × 4 employees
+    totalEmployees: 0,
   });
 
-  const [recentAssignments, setRecentAssignments] = useState([
-    {
-      id: 'ASG001',
-      formType: 'Daily Business Update',
-      assignedTo: '5 Employees',
-      date: '2025-12-09',
-      status: 'Pending',
-      assignedAt: '10:30 AM'
-    },
-    {
-      id: 'ASG002',
-      formType: 'Gold Stock Verification',
-      assignedTo: '3 Employees',
-      date: '2025-12-09',
-      status: 'Completed',
-      assignedAt: '09:15 AM'
-    },
-    {
-      id: 'ASG003',
-      formType: 'KYC & Compliance',
-      assignedTo: '8 Employees',
-      date: '2025-12-08',
-      status: 'In Progress',
-      assignedAt: '04:45 PM'
-    }
-  ]);
+  const [recentAssignments, setRecentAssignments] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const getStatusBadge = (status) => {
-    const statusConfig = {
-      'Pending': { class: 'status-pending', icon: '⏳' },
-      'Completed': { class: 'status-completed', icon: '✅' },
-      'In Progress': { class: 'status-progress', icon: '🔄' }
-    };
-    const config = statusConfig[status] || statusConfig['Pending'];
-    return (
-      <span className={`status-badge ${config.class}`}>
-        {config.icon} {status}
-      </span>
-    );
+  /* ---------------- FETCH DATA ---------------- */
+  const fetchDashboardData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(
+        `${APPS_SCRIPT_WEB_APP_URL}?action=dashboard`
+      );
+      const data = await res.json();
+      
+      if (data.error) {
+          throw new Error(data.error);
+      }
+      
+      setStats(data.stats);
+      setRecentAssignments(data.recentAssignments);
+    } catch (err) {
+      setError("Failed to load dashboard data: " + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  /* ---------------- ACTION HANDLERS ---------------- */
+  const handleSendReminder = async (assignmentId) => {
+    try {
+        // Optimistic UI update disabled for simplicity, will rely on success message
+        const res = await fetch(
+          `${APPS_SCRIPT_WEB_APP_URL}?action=sendReminder&assignmentId=${assignmentId}`
+        );
+        const data = await res.json();
+        
+        if (data.error) {
+            alert(`❌ Failed to send reminder: ${data.error}`);
+        } else {
+            alert(`✅ Reminder email sent: ${data.message}`);
+        }
+    } catch (err) {
+        alert("❌ Network error: Could not connect to send reminder.");
+    }
+    // No need to refetch dashboard data as status doesn't change
+  };
+
+  const handleViewSubmission = (link) => {
+    window.open(link, "_blank");
+  };
+
+  /* ---------------- HELPERS ---------------- */
+  const getStatusBadge = (status) => (
+    <span
+      style={{
+        padding: "6px 10px",
+        borderRadius: "5px",
+        color: "#fff",
+        fontWeight: "bold",
+        backgroundColor: status === "Submitted" ? "#2ecc71" : "#f39c12",
+      }}
+    >
+      {status}
+    </span>
+  );
+
+  const filteredAssignments =
+    filterStatus === "All"
+      ? recentAssignments
+      : recentAssignments.filter((a) => a.status === filterStatus);
+
+  /* ---------------- RENDER ---------------- */
   return (
     <div className="dashboard-container">
-      {/* Welcome Section */}
-      <div className="dashboard-welcome">
-        <div>
-          <h1>Welcome back, {managerData.name}! </h1>
-        </div>
-        <div className="dashboard-date">
-          <span className="date-label">Today</span>
-          <span className="date-value">{new Date().toLocaleDateString('en-IN', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          })}</span>
-        </div>
-      </div>
+      <h1>Welcome back, {managerData.name}</h1>
 
-      {/* Stats Cards */}
+      {loading && <p>Loading…</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {/* --------- STATS --------- */}
       <div className="stats-grid">
-        <div className="stat-card blue">
-          <div className="stat-icon">📋</div>
-          <div className="stat-content">
-            <div className="stat-value">{stats.totalAssignments}</div>
-            <div className="stat-label">Total Assignments</div>
+        {[
+          ["📋", stats.totalAssignments, "Total Assignments"],
+          ["⏳", stats.pendingForms, "Pending Forms"],
+          ["✅", stats.completedToday, "Completed Today"],
+          ["👥", stats.totalEmployees, "Total Employees"],
+        ].map(([icon, value, label]) => (
+          <div key={label} className="stat-card">
+            <div className="stat-icon">{icon}</div>
+            <h2>{value}</h2>
+            <p>{label}</p>
           </div>
-        </div>
-
-        <div className="stat-card yellow">
-          <div className="stat-icon">⏳</div>
-          <div className="stat-content">
-            <div className="stat-value">{stats.pendingForms}</div>
-            <div className="stat-label">Pending Forms</div>
-          </div>
-        </div>
-
-        <div className="stat-card green">
-          <div className="stat-icon">✅</div>
-          <div className="stat-content">
-            <div className="stat-value">{stats.completedToday}</div>
-            <div className="stat-label">Completed Today</div>
-          </div>
-        </div>
-
-        <div className="stat-card purple">
-          <div className="stat-icon">👥</div>
-          <div className="stat-content">
-            <div className="stat-value">{stats.totalEmployees}</div>
-            <div className="stat-label">Total Employees</div>
-          </div>
-        </div>
+        ))}
       </div>
 
-      {/* Quick Actions */}
-      <div className="quick-actions-section">
-        <h2>Quick Actions</h2>
-        <div className="quick-actions-grid">
-          <div className="quick-action-card">
-            <div className="action-icon">📊</div>
-            <h3>Daily Business</h3>
-            <p>Assign daily business update form</p>
-          </div>
-          <div className="quick-action-card">
-            <div className="action-icon">🔒</div>
-            <h3>Gold Stock</h3>
-            <p>Verify vault inventory</p>
-          </div>
-          <div className="quick-action-card">
-            <div className="action-icon">📋</div>
-            <h3>KYC Check</h3>
-            <p>Compliance verification</p>
-          </div>
-          <div className="quick-action-card">
-            <div className="action-icon">💰</div>
-            <h3>Loan Recovery</h3>
-            <p>Collection status tracking</p>
-          </div>
-        </div>
+      {/* --------- FILTER --------- */}
+      <div style={{ marginTop: 20 }}>
+        <label>Status Filter: </label>
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="Submitted">Submitted</option>
+          <option value="Pending">Pending</option>
+        </select>
       </div>
 
-      {/* Recent Assignments */}
-      <div className="recent-assignments-section">
-        <h2>Recent Assignments</h2>
-        <div className="assignments-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Assignment ID</th>
-                <th>Form Type</th>
-                <th>Assigned To</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentAssignments.map((assignment) => (
-                <tr key={assignment.id}>
-                  <td><strong>{assignment.id}</strong></td>
-                  <td>{assignment.formType}</td>
-                  <td>{assignment.assignedTo}</td>
-                  <td>{assignment.date}</td>
-                  <td>{assignment.assignedAt}</td>
-                  <td>{getStatusBadge(assignment.status)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* --------- TABLE --------- */}
+      <table className="assignments-table">
+        <thead>
+          <tr>
+            <th style={{ width: '50px' }}>ID</th> {/* Added style for ID width/alignment */}
+            <th>Form</th>
+            <th>Employee</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th style={{ width: '100px' }}>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredAssignments.length === 0 && (
+            <tr>
+              <td colSpan="7" align="center">
+                No records found
+              </td>
+            </tr>
+          )}
 
-      {/* Branch Info */}
-      <div className="branch-info-card">
-        <h3>📍 Branch Information</h3>
-        <div className="branch-details">
-          <div className="branch-detail-item">
-            <span className="detail-label">Branch:</span>
-            <span className="detail-value">{managerData.branch}</span>
-          </div>
-          <div className="branch-detail-item">
-            <span className="detail-label">Manager ID:</span>
-            <span className="detail-value">{managerData.id}</span>
-          </div>
-          <div className="branch-detail-item">
-            <span className="detail-label">Email:</span>
-            <span className="detail-value">{managerData.email}</span>
-          </div>
-        </div>
-      </div>
+          {filteredAssignments.map((a) => (
+            <tr key={a.id}>
+              <td style={{ textAlign: 'center' }}>{a.id}</td> {/* Aligned ID content */}
+              <td>{a.formType}</td>
+              <td>{a.assignedTo}</td>
+              <td>{a.date}</td>
+              <td>{a.assignedAt}</td>
+              <td>{getStatusBadge(a.status)}</td>
+              <td>
+                {a.status === "Submitted" ? (
+                  <button
+                    className="btn view"
+                    onClick={() => handleViewSubmission(a.submissionLink)}
+                  >
+                    View
+                  </button>
+                ) : (
+                  <button
+                    className="btn remind"
+                    onClick={() => handleSendReminder(a.id)}
+                  >
+                    Remind
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
